@@ -44,18 +44,55 @@ class Graph {
 
   // this function returns an array of Node values using DFS
   depthFirstSearch(start) {
-    let toVisitStack = [start];
-    let seen = [];
-    console.log('toVisitStack:', toVisitStack);
-    while(toVisitStack.length){
-      let currNode = toVisitStack.pop();
-      toVisitStack.push();
-        seen.push(node.value);
+    const visited = new Set();
+    const result = [];
+    function traverse(vertex){
+      //base case
+      if (!vertex){
+        return null;
+      }
+      //visit node
+      visited.add(vertex);
+      result.push(vertex.value);
+
+      //visit neighbors
+      vertex.adjacent.forEach(neighboar => {
+        if(!visited.has(neighboar)){
+          return traverse(neighboar);
+        }
+      })
     }
+    traverse(start);
+
+    return result;
   }
 
   // this function returns an array of Node values using BFS
-  breadthFirstSearch(start) {}
+  breadthFirstSearch(start) {
+    // Create an empty queue
+    const queue = [start];
+    const result = [];
+    const visited = new Set();
+    let currentVertex;
+
+    //visit node
+    visited.add(start);
+
+    //while there are still neighbors to visit
+    while(queue.length){
+      currentVertex = queue.shift();
+      result.push(currentVertex.value);
+
+      //visit neighbors and push onto stack
+      currentVertex.adjacent.forEach(neighbor => {
+        if(!visited.has(neighbor)){
+          visited.add(neighbor);
+          queue.push(neighbor);
+        }
+      });
+    }
+    return result;
+  }
 }
 
 module.exports = {Graph, Node}
